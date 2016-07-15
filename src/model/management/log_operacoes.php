@@ -6,7 +6,6 @@
 <body>
 <h1>Compra de Produtos</h1><br><br>
 <table border="1">
-
     <tr>
         <th>
             ID
@@ -29,17 +28,20 @@
             Status
         </th>
         <th>
-            Comprar
+            Alterar
+        </th>
+        <th>
+            Excluir
         </th>
     </tr>
-    <tr>
-        <?php
-        require_once '../dao/mercadoria_dao.php';
-        $result = new mercadoria_dao();
-        $result->listaDiponiveis();
-        ?>
-    </tr>
 
+    <?php
+    require_once '../dao/mercadoria_dao.php';
+    //require_once '../entity/Mercadoria.php';
+
+    $result = new mercadoria_dao();
+    $result->listaMercadoria();
+    ?>
 </table>
 </body>
 </html>
