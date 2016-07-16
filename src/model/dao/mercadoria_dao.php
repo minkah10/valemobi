@@ -131,7 +131,9 @@ class mercadoria_dao
 
         $mercadoria = $this->carregaDados($cod_mercadoria);
         $qtd_existente = $mercadoria->getQtd();
-
+        $tipo_operacao = $mercadoria->getTipoNegocio();
+        $nome_mercadoria = $mercadoria->getNomeMercadoria();
+        $preco = $mercadoria->getPreco();
 
         $pdo = new Conexao();
         $conn = $pdo->openConnection();
@@ -141,7 +143,7 @@ class mercadoria_dao
         $stmt->execute(array(':qtd' => $qtd_total, ':cod_mercadoria' => $cod_mercadoria));
 
         $mercadoria->setQtd(($qtd_total));
-
+        $this->gravaOperacao($cod_mercadoria, $tipo_operacao, $nome_mercadoria, $qtd_comprada, $preco);
 
         return 'Quantidade solicitada insdisponivel, digite um valor menor';
     }
@@ -150,51 +152,79 @@ class mercadoria_dao
     {
         require_once '../entity/Mercadoria.php';
 
+        //Carregar todos os dados para poder passar como parametro
+
         $mercadoria = $this->carregaDados($cod_mercadoria);
         $qtd_existente = $mercadoria->getQtd();
-
+        $tipo_operacao = $mercadoria->getTipoNegocio();
+        $nome_mercadoria = $mercadoria->getNomeMercadoria();
+        $preco = $mercadoria->getPreco();
 
         $pdo = new Conexao();
         $conn = $pdo->openConnection();
         $sql = 'UPDATE mercadoria SET qtd = :qtd WHERE cod_mercadoria = :cod_mercadoria';
-        if (!($qtd_existente < $qtd_vendida) && ($qtd_existente !== 0)) {
+        if (($qtd_existente >= $qtd_vendida) && ($qtd_existente !== 0)) {
             $qtd_total = ($qtd_existente - $qtd_vendida);
             $stmt = $conn->prepare($sql);
             $stmt->execute(array(':qtd' => $qtd_total, ':cod_mercadoria' => $cod_mercadoria));
 
             $mercadoria->setQtd(($qtd_total));
+            $this->gravaOperacao($cod_mercadoria, $tipo_operacao, $nome_mercadoria, $qtd_vendida, $preco);
         }
 
         return 'Quantidade solicitada insdisponivel, digite um valor menor';
     }
 
+    function gravaOperacao($cod_mercadoria, $tipo_operacao, $nome_mercadoria, $qtd_operacao, $preco)
+    {
+        try {
+            $conn = new Conexao();
+            $pdo = $conn->openConnection();
+            $sql = 'INSERT INTO log_operacao (cod_mercadoria, tipo_operacao, nome_mercadoria, qtd_operacao, preco )
+                    VALUES (:cod_mercadoria, :tipo_operacao, :nome_mercadoria, :qtd_operacao, :preco)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(':cod_mercadoria' => $cod_mercadoria, ':tipo_operacao' => $tipo_operacao,
+                ':nome_mercadoria' => $nome_mercadoria, ':qtd_operacao' => $qtd_operacao, ':preco' => $preco));
+        } catch (PDOException $e) {
+            echo 'Error ao adicionar ' . $e->getMessage();
+        };
+    }
 
-    /* function excluiUsuario($id)
-     {
-         try {
-             $conn = new Conexao();
-             $stmt = $conn->openConnection()->prepare('DELETE FROM usuario WHERE id = :id');
-             $stmt->execute(array(':id' => $id));
+    function listaOperacoes()
+    {
+        try {
+            $conn = new Conexao();
+            $sql = 'SELECT * FROM log_operacao';
+            $result = $conn->openConnection()->query($sql);
 
-             //echo "Item: ". $id." exluido";
+            foreach ($result as $row) {
+                print "<tr>
+                         <td>" .
+                    $row['id_operacao'] .
+                    "<td>" .
+                    $row['cod_mercadoria'] .
+                    "</td>" .
+                    "<td>" .
+                    $row['nome_mercadoria'] .
+                    "</td>" .
+                    "<td>" .
+                    $row['tipo_operacao'] .
+                    "</td>" .
+                    "<td>" .
+                    $row['qtd_operacao'] .
+                    "</td>" .
+                    "<td>" .
+                    $row['preco'] .
+                    "</td>" .
+                    "<td>" .
+                    $row['data_operacao'] .
+                    "</td>" .
+                    "</tr>";
+            }
 
-         } catch (PDOException $e) {
-             echo 'Error ao excluir ' . $e->getMessage();
-         }
+        } catch (PDOException $e) {
+            echo 'Error ' . $e;
+        }
+    }
 
-     }
-
-     function alteraLivro($id, $nome, $email)
-     {
-         try {
-             $conn = new Conexao();
-             $stmt = $conn->openConnection()->prepare('UPDATE usuario SET nome = :nome, email = :email, WHERE id = :id');
-             $stmt->execute(array(':id' => $id, ':nome' => $nome, ':email' => $email));
-
-             //echo "Item: ". $id." alterado";
-
-         } catch (PDOException $e) {
-             echo 'Error ao alterar ' . $e->getMessage();
-         }
-     }*/
 }

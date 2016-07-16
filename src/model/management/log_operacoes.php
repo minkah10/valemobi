@@ -4,45 +4,43 @@
     <title>Compra</title>
 </head>
 <body>
-<h1>Compra de Produtos</h1><br><br>
+<h1>Lista de Operações</h1><br><br>
 <table border="1">
+    <thead>
     <tr>
         <th>
-            ID
+            Id da Operação
         </th>
-
+        <th>
+            Código da Mercadoria
+        </th>
         <th>
             Nome da Mercadoria
         </th>
-
         <th>
-            Quantidade
+            Tipo de Operação
         </th>
         <th>
-            Preço
+            Quantidade Comprada/Vendida
         </th>
         <th>
-            Tipo de Negócio
+            Preço Unitário
         </th>
         <th>
-            Status
-        </th>
-        <th>
-            Alterar
-        </th>
-        <th>
-            Excluir
+            Data
         </th>
     </tr>
-
+    </thead>
     <?php
-    require_once '../dao/mercadoria_dao.php';
-    //require_once '../entity/Mercadoria.php';
+        require_once '../dao/mercadoria_dao.php';
 
-    $result = new mercadoria_dao();
-    $result->listaMercadoria();
-    ?>
+        $result = new mercadoria_dao();
+        $result->listaOperacoes();
+         ?>
 </table>
+<form method="post" action="../forms/cadastro_mercadoria.php">
+    <input type="submit" value="Voltar">
+</form>
 </body>
 </html>
 <?php

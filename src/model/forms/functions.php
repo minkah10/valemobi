@@ -32,7 +32,7 @@ try {
                 "<h1>Produto não disponivel para compra</h1>";
                 break;
         }
-        header('Location: ../forms/cadastro_mercadoria.php');
+        header('Location: ../management/log_operacoes.php');
     }
 
 } catch (Exception $e) {
