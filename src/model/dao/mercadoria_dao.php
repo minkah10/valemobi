@@ -1,10 +1,9 @@
 <?php
 
-require_once '../dao/Conexao.php';
-require_once '../entity/Mercadoria.php';
+include_once 'Conexao.php';
+include_once '../entity/Mercadoria.php';
 
-$m = new mercadoria_dao();
-$m->listaDiponiveis();
+
 
 class mercadoria_dao
 {
@@ -79,20 +78,11 @@ class mercadoria_dao
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $result;
-//            $qtd = 'SELECT qtd FROM mercadoria WHERE qtd > 0';
-            /*if ($result['qtd'] < 0){
-
-            };*/
         } catch (PDOException $e) {
             echo 'Error ' . $e;
         }
     }
 
-    /**
-     * 1.Faz uma Query que retorne todas as mercadorias
-     * 2.Utilize um foreach com $row como chave para pegar os atributos da linha
-     *
-     */
     function carregaDados($cod_mercadoria)
     {
         try {
@@ -120,11 +110,6 @@ class mercadoria_dao
         }
     }
 
-    /**
-     * 1.Cria o carrega dados - ok
-     * 2.Soma pega a QTD_MERCADORIA e subtri pela QTD_SOLICITADA
-     * 3.Se for maior que a existente, retone uma msg de ERROR
-     */
     function executaCompra($cod_mercadoria, $qtd_comprada)
     {
         require_once '../entity/Mercadoria.php';

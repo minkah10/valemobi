@@ -19,4 +19,4 @@ $mercadoria->setStatusMercadoria($status);
 
 $m_dao->adicionaMercadoria($mercadoria);
 
-header('Location: ../forms/cadastro_mercadoria.php');
+header('Location: /index.php');

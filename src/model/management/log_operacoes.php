@@ -38,7 +38,7 @@
         $result->listaOperacoes();
          ?>
 </table>
-<form method="post" action="../forms/cadastro_mercadoria.php">
+<form method="post" action="/index.php">
     <input type="submit" value="Voltar">
 </form>
 </body>
