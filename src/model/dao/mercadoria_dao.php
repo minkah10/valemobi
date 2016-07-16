@@ -169,6 +169,7 @@ class mercadoria_dao
             $stmt->execute(array(':qtd' => $qtd_total, ':cod_mercadoria' => $cod_mercadoria));
 
             $mercadoria->setQtd(($qtd_total));
+            if ($tipo_operacao)
             $this->gravaOperacao($cod_mercadoria, $tipo_operacao, $nome_mercadoria, $qtd_vendida, $preco);
         }
 

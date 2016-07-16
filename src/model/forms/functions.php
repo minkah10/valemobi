@@ -21,7 +21,7 @@ try {
                 $conn = new mercadoria_dao();
                 $conn->executaCompra($cod_mercadoria, $qtd_comprada);
                 }
-                "<h1>Produto não disponivel para compra</h1>";
+
                 break;
             case 'Venda':
                 if (isset($tipo_negocio) and $tipo_negocio ==='Venda'){
@@ -29,7 +29,7 @@ try {
                     $conn = new mercadoria_dao();
                     $conn->executaVenda($cod_mercadoria, $qtd_vendida);
                 }
-                "<h1>Produto não disponivel para compra</h1>";
+
                 break;
         }
         header('Location: ../management/log_operacoes.php');
